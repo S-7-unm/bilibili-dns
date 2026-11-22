@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "upstream": {
+    "repo": "realzza/bilibili-accelerator",
+    "version": "0.5.1"
+  },
+  "updatedAt": "2026-11-18T04:40:00.000Z",
+  "mediaHosts": [
+    "upos-bstar-mirrorakam.akamaized.net",
+    "upos-bstar1-mirrorakam.akamaized.net",
+    "upos-hz-mirrorakam.akamaized.net",
+    "uposdash-302-bilivideo.yfcdn.net"
+  ],
+  "ruleHosts": [
+    "p-bstarstatic.akamaized.net",
+    "p.bstarstatic.com"
+  ],
+  "notes": [
+    "具体 mirror 子域由 GitHub Actions 从上游脚本自动提取补全，请勿手工维护。",
+    "改写脚本的内置后缀白名单已覆盖 bilivideo.com / bilivideo.cn / acgvideo.com 等全部子域，本清单只用于放宽新增域名。"
+  ]
+}

@@ -1,0 +1,23 @@
+# NAME: BiliBili Media CDN
+# REPO: https://github.com/realzza/bilibili-accelerator
+# SOURCE: blackmatrix7/ios_rule_script BiliBili (2025-06-06) + 上游脚本域名提取
+# UPDATED: 2026-11-18
+# 用途：作为 [Remote Rule] 订阅，策略填 PROXY；插件内置 [Rule] 已含同名条目，二选一即可
+DOMAIN-SUFFIX,bilivideo.com
+DOMAIN-SUFFIX,bilivideo.cn
+DOMAIN-SUFFIX,bilivideo.net
+DOMAIN-SUFFIX,acgvideo.com
+DOMAIN-SUFFIX,ourdvsss.com
+DOMAIN-SUFFIX,ksyungslb.com
+DOMAIN-SUFFIX,smtcdns.net
+DOMAIN-SUFFIX,mincdn.com
+DOMAIN-SUFFIX,maoercdn.com
+DOMAIN-SUFFIX,bilicdn1.com
+DOMAIN-SUFFIX,bilicdn2.com
+DOMAIN-SUFFIX,bilicdn3.com
+DOMAIN-SUFFIX,bilicdn4.com
+DOMAIN-SUFFIX,bilicdn5.com
+DOMAIN-SUFFIX,uposdash-302-bilivideo.yfcdn.net
+DOMAIN,upos-hz-mirrorakam.akamaized.net
+DOMAIN,upos-bstar-mirrorakam.akamaized.net
+DOMAIN,upos-bstar1-mirrorakam.akamaized.net
