@@ -1,0 +1,67 @@
+name: 同步上游线路并校验插件
+
+on:
+  schedule:
+    # 每天 01:17（北京时间）跑一次；分钟数取质数，避开整点拥塞
+    - cron: "17 17 * * *"
+  workflow_dispatch: {}
+  push:
+    paths:
+      - "Scripts/**"
+      - "build/**"
+      - "test/**"
+      - "*.plugin"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 语法检查
+        run: |
+          node --check Scripts/bili-playurl-rewrite.js
+          node --check Scripts/bili-line-probe.js
+
+      - name: 插件结构检查
+        run: node build/lint-plugin.mjs
+
+      - name: 逻辑回归测试
+        run: node test/run-tests.mjs
+
+      - name: 同步上游线路清单
+        run: node build/sync-upstream.mjs
+
+      - name: 同步后重新校验
+        run: |
+          node build/lint-plugin.mjs
+          node test/run-tests.mjs
+
+      - name: 提交变更
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "没有变化，跳过提交"
+            exit 0
+          fi
+          git add -A
+          git commit -m "chore(sync): 更新上游线路清单 $(date -u +%F)"
+          git push
+
+      - name: 发布摘要
+        run: |
+          echo "## 线路清单同步结果" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          node -e 'const j=require("./build/cdn-hosts.json");console.log("- 上游版本："+(j.upstream&&j.upstream.version||"未知"));console.log("- 媒体线路数："+((j.mediaHosts||j.hosts||[]).length));console.log("- 更新时间："+j.updatedAt);' >> "$GITHUB_STEP_SUMMARY" || true
