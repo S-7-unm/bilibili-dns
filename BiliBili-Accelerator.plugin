@@ -16,7 +16,7 @@ rewrite_mode = select,"backup","probe","fixed","off",type=string,tag=换线路�
 prefer_host = input,type=string,tag=固定线路 host,desc=换线路模式选 fixed 时填写，例如 upos-sz-mirrorali.bilivideo.com
 probe_enabled = switch,false,type=boolean,tag=启用定时探测,desc=会按周期向 CDN 发少量测速请求，不需要可关
 probe_cron = input,"0 */4 * * *",type=string,tag=探测周期,desc=Cron 表达式，默认每 4 小时
-ruleset_url = input,"https://cdn.jsdelivr.net/gh/CHANGE_ME_OWNER/CHANGE_ME_REPO@main/build/cdn-hosts.json",type=string,tag=线路清单地址,desc=指向本仓库 build/cdn-hosts.json；留空则只用内置白名单
+ruleset_url = input,"https://cdn.jsdelivr.net/gh/S-7-unm/bilibili-dns@main/build/cdn-hosts.json",type=string,tag=线路清单地址,desc=指向本仓库 build/cdn-hosts.json；留空则只用内置白名单
 probe_node = input,type=string,tag=探测指定策略,desc=留空跟随当前路由，可填策略组名或节点名
 probe_notify = switch,false,type=boolean,tag=探测结果通知,desc=线路发生变化时推送一次
 rewrite_debug = switch,false,type=boolean,tag=改写调试日志
@@ -65,8 +65,8 @@ DOMAIN-SUFFIX,im9.com,DIRECT
 # DOMAIN-SUFFIX,biliapi.net,PROXY
 
 [Script]
-response if (${url} ~= /^https:\/\/(api\.bilibili\.com|app\.bilibili\.com|api\.live\.bilibili\.com|app\.biliapi\.net|live\.biliapi\.net)\/(x\/player\/(wbi\/)?playurl|pgc\/player\/(web|api)\/playurl|x\/v2\/view|room\/v1\/Room\/playUrl|xlive\/web-room\/v1\/index\/getRoomPlayInfo)/i && ${response.header['Content-Type']} ~= /application\/json/i) then script("https://cdn.jsdelivr.net/gh/CHANGE_ME_OWNER/CHANGE_ME_REPO@main/Scripts/bili-playurl-rewrite.js", {${rewrite_mode}, ${prefer_host}, ${rewrite_debug}}) with enable=${rewrite_enabled}, requires_body=true, timeout=20, tag="B站播放线路改写"
-cron ${probe_cron} then script("https://cdn.jsdelivr.net/gh/CHANGE_ME_OWNER/CHANGE_ME_REPO@main/Scripts/bili-line-probe.js", {${ruleset_url}, ${probe_node}, ${probe_notify}, ${probe_debug}}) with enable=${probe_enabled}, timeout=120, tag="B站线路探测"
+response if (${url} ~= /^https:\/\/(api\.bilibili\.com|app\.bilibili\.com|api\.live\.bilibili\.com|app\.biliapi\.net|live\.biliapi\.net)\/(x\/player\/(wbi\/)?playurl|pgc\/player\/(web|api)\/playurl|x\/v2\/view|room\/v1\/Room\/playUrl|xlive\/web-room\/v1\/index\/getRoomPlayInfo)/i && ${response.header['Content-Type']} ~= /application\/json/i) then script("https://cdn.jsdelivr.net/gh/S-7-unm/bilibili-dns@main/Scripts/bili-playurl-rewrite.js", {${rewrite_mode}, ${prefer_host}, ${rewrite_debug}}) with enable=${rewrite_enabled}, requires_body=true, timeout=20, tag="B站播放线路改写"
+cron ${probe_cron} then script("https://cdn.jsdelivr.net/gh/S-7-unm/bilibili-dns@main/Scripts/bili-line-probe.js", {${ruleset_url}, ${probe_node}, ${probe_notify}, ${probe_debug}}) with enable=${probe_enabled}, timeout=120, tag="B站线路探测"
 
 [Mitm]
 hostname = api.bilibili.com,app.bilibili.com,api.live.bilibili.com,app.biliapi.net,live.biliapi.net
