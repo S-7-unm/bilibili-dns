@@ -27,27 +27,27 @@ probe_debug = switch,false,type=boolean,tag=探测调试日志
 real-ip = *.bilivideo.com,*.bilivideo.cn,*.bilivideo.net,*.acgvideo.com
 
 [Rule]
-# ===== 视频与直播 CDN 交给 PROXY（在 Loon 里把 PROXY 指向你的国内落地节点）=====
-DOMAIN-SUFFIX,bilivideo.com,PROXY
-DOMAIN-SUFFIX,bilivideo.cn,PROXY
-DOMAIN-SUFFIX,bilivideo.net,PROXY
-DOMAIN-SUFFIX,acgvideo.com,PROXY
-DOMAIN-SUFFIX,ourdvsss.com,PROXY
-DOMAIN-SUFFIX,ksyungslb.com,PROXY
-DOMAIN-SUFFIX,smtcdns.net,PROXY
-DOMAIN-SUFFIX,mincdn.com,PROXY
-DOMAIN-SUFFIX,maoercdn.com,PROXY
-DOMAIN-SUFFIX,bilicdn1.com,PROXY
-DOMAIN-SUFFIX,bilicdn2.com,PROXY
-DOMAIN-SUFFIX,bilicdn3.com,PROXY
-DOMAIN-SUFFIX,bilicdn4.com,PROXY
-DOMAIN-SUFFIX,bilicdn5.com,PROXY
-DOMAIN-SUFFIX,uposdash-302-bilivideo.yfcdn.net,PROXY
-DOMAIN,upos-hz-mirrorakam.akamaized.net,PROXY
-DOMAIN,upos-bstar-mirrorakam.akamaized.net,PROXY
-DOMAIN,upos-bstar1-mirrorakam.akamaized.net,PROXY
+# ===== 媒体 CDN 强制直连，防止被全局代理或其他规则拐到海外节点 =====
+DOMAIN-SUFFIX,bilivideo.com,DIRECT
+DOMAIN-SUFFIX,bilivideo.cn,DIRECT
+DOMAIN-SUFFIX,bilivideo.net,DIRECT
+DOMAIN-SUFFIX,acgvideo.com,DIRECT
+DOMAIN-SUFFIX,ourdvsss.com,DIRECT
+DOMAIN-SUFFIX,ksyungslb.com,DIRECT
+DOMAIN-SUFFIX,smtcdns.net,DIRECT
+DOMAIN-SUFFIX,mincdn.com,DIRECT
+DOMAIN-SUFFIX,maoercdn.com,DIRECT
+DOMAIN-SUFFIX,bilicdn1.com,DIRECT
+DOMAIN-SUFFIX,bilicdn2.com,DIRECT
+DOMAIN-SUFFIX,bilicdn3.com,DIRECT
+DOMAIN-SUFFIX,bilicdn4.com,DIRECT
+DOMAIN-SUFFIX,bilicdn5.com,DIRECT
+DOMAIN-SUFFIX,uposdash-302-bilivideo.yfcdn.net,DIRECT
+DOMAIN,upos-hz-mirrorakam.akamaized.net,DIRECT
+DOMAIN,upos-bstar-mirrorakam.akamaized.net,DIRECT
+DOMAIN,upos-bstar1-mirrorakam.akamaized.net,DIRECT
 
-# ===== 页面、接口与静态资源保持原样，避免影响登录 / 弹幕 / 推荐流 =====
+# ===== 页面、接口与静态资源保持直连 =====
 DOMAIN-SUFFIX,hdslb.com,DIRECT
 DOMAIN-SUFFIX,hdslb.net,DIRECT
 DOMAIN-SUFFIX,bilibili.com,DIRECT
@@ -59,10 +59,6 @@ DOMAIN-SUFFIX,acg.tv,DIRECT
 DOMAIN-SUFFIX,b23.tv,DIRECT
 DOMAIN-SUFFIX,biligo.com,DIRECT
 DOMAIN-SUFFIX,im9.com,DIRECT
-
-# ===== 需要整站回国（含版权判定、弹幕、大会员）时，取消下面两行注释并删掉上面的 DIRECT 段 =====
-# DOMAIN-SUFFIX,bilibili.com,PROXY
-# DOMAIN-SUFFIX,biliapi.net,PROXY
 
 [Script]
 response if (${url} ~= /^https:\/\/(api\.bilibili\.com|app\.bilibili\.com|api\.live\.bilibili\.com|app\.biliapi\.net|live\.biliapi\.net)\/(x\/player\/(wbi\/)?playurl|pgc\/player\/(web|api)\/playurl|x\/v2\/view|room\/v1\/Room\/playUrl|xlive\/web-room\/v1\/index\/getRoomPlayInfo)/i && ${response.header['Content-Type']} ~= /application\/json/i) then script("https://cdn.jsdelivr.net/gh/S-7-unm/bilibili-dns@main/Scripts/bili-playurl-rewrite.js", {${rewrite_mode}, ${prefer_host}, ${rewrite_debug}}) with enable=${rewrite_enabled}, requires_body=true, timeout=20, tag="B站播放线路改写"
