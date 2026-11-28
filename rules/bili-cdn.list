@@ -1,6 +1,6 @@
 # B 站媒体 CDN 线路清单（自动生成，请勿手改）
 # 上游 realzza/bilibili-accelerator v0.5.1
-# 更新时间 2026-11-27T01:02:27.945Z
+# 更新时间 2026-11-28T00:34:39.054Z
 # 用法：Loon 配置里 [Remote Rule] 添加本文件地址，策略填 PROXY
 DOMAIN-SUFFIX,bilivideo.com
 DOMAIN-SUFFIX,bilivideo.cn
